@@ -1,0 +1,14 @@
+[Icon Theme]
+Name=mySet
+Comment=Tango Icon Theme MFK
+Inherits=default
+Directories = source, dictionary, windows
+
+[source]
+Size = 32
+
+[dictionary]
+Size = 32
+
+[windows]
+Size = 32

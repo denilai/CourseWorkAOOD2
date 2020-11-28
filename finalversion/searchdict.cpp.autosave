@@ -1,0 +1,87 @@
+#include "searchdict.h"
+#include <QLabel>
+#include <QHBoxLayout>
+#include <QVBoxLayout>
+#include <QString>
+#include <QPushButton>
+#include <QTextEdit>
+#include <QFileDialog>
+
+FindDictDialog::FindDictDialog(QWidget *parent) : QWidget(parent)
+{
+    searchLabel = new QLabel("Найти");
+    searchLabel -> setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    searchLabel -> setFixedWidth(110);
+    
+    
+    resultLabel = new QLabel ("Результат поиска");
+    resultLabel -> setFixedWidth(110);
+    resultLabel -> setSizePolicy(QSizePolicy ::Fixed, QSizePolicy::Fixed);
+
+
+    requestEdit = new QTextEdit(this);
+    requestEdit -> setMaximumHeight(30);
+    requestEdit -> setMinimumWidth(300);
+    requestEdit  -> setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Fixed);  
+
+    resultEdit = new QTextEdit(this);
+    resultEdit -> setMaximumHeight(30);
+    resultEdit  -> setMinimumWidth(300);
+    resultEdit -> setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Fixed);
+    
+    clearButton = new QPushButton ("Очистить");
+    clearButton -> setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    searchButton = new QPushButton ("Найти");
+    searchButton -> setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+
+    buttonLayout = new QHBoxLayout;
+    buttonLayout -> addWidget(searchButton);
+
+    requestLayout =  new QHBoxLayout;
+    requestLayout -> setAlignment(Qt::AlignLeft);
+    requestLayout -> setSpacing(4);
+    requestLayout -> addWidget(requestLabel);
+    requestLayout -> addWidget(requestEdit);
+
+    resultLayout =  new QHBoxLayout;
+    resultLayout -> setAlignment(Qt::AlignLeft);
+    resultLayout -> setSpacing(4);
+    resultLayout -> addWidget(resultLabel);
+    resultLayout -> addWidget(resultEdit);
+    resultLayout -> addWidget(clearButton);
+
+    inputLayout = new QVBoxLayout;
+    inputLayout -> addLayout(requestLayout);
+    inputLayout -> addLayout(resultLayout);
+
+    mainLayout = new QVBoxLayout(this);
+    mainLayout -> addLayout(inputLayout);
+    //mainLayout -> addStretch(1);
+    mainLayout -> addLayout(buttonLayout);
+    this-> setSizePolicy(QSizePolicy::Maximum,QSizePolicy::Maximum);
+    this -> setMaximumHeight(147);
+    connect(searchButton, &QPushButton::clicked, this, &FindDictDialog::setOnSearchButtonClicked);
+    connect(clearButton, &QPushButton::clicked, this, &FindDictDialog::setOnClearButtonClicked);
+
+}
+
+void FindDictDialog::setOnSearchButtonClicked(){
+    emit searchElem(requestEdit->toP);
+    clean();
+}
+
+void FindDictDialog::setOnSearchDirClicked(){
+    dirEdit -> setPlainText(
+                QFileDialog::getExistingDirectory
+                    (this, tr("Open Directory"),
+                    "/home",
+                    QFileDialog::ShowDirsOnly
+                    | QFileDialog::DontResolveSymlinks));
+}
+
+void FindDictDialog::clean(){
+    nameEdit -> setText("");
+    dirEdit -> setText("");
+}
+
+

@@ -1,0 +1,48 @@
+#ifndef FILECREATEDIALOG_H
+#define FILECREATEDIALOG_H
+
+#include <QWidget>
+
+class QHBoxLayout;
+class QVBoxLayout;
+class QString;
+class QLabel;
+class QTextEdit;
+class QPushButton;
+
+class FindDictDialog : public QWidget
+{
+    Q_OBJECT
+public:
+    explicit FindDictDialog(QWidget *parent = nullptr);
+signals:
+    void createFile(QString dir, QString name);
+private:
+    QHBoxLayout * requestLayout;
+    QHBoxLayout * resultLayout;
+    QHBoxLayout * buttonLayout;
+    QVBoxLayout * mainLayout;
+    QVBoxLayout * inputLayout;
+    
+    QHBoxLayout * dirLayout;
+    QHBoxLayout * nameLayout;
+    QHBoxLayout * buttonLayout;
+    QVBoxLayout * mainLayout;
+    QVBoxLayout * inputLayout;
+    QLabel * searshLabel;
+    QLabel * resultLabel;
+    
+    QPushButton * searchButton;
+    QPushButton * clearButton;
+    
+    
+    QTextEdit * nameEdit;
+    QTextEdit * dirEdit;
+    void clean();
+private slots:
+    void setOnSearchDirClicked();
+    void setOnCreateButtonClicked();
+
+};
+
+#endif // FILECREATEDIALOG_H
