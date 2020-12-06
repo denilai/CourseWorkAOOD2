@@ -76,10 +76,11 @@ bool Dictionary::isalphaRus(wchar_t c) {
         || c == (L'ё') || c == (L'Ё');
 }
 
-void Dictionary::analise(QString text){
+void Dictionary::analyze(QString text){
     QString withoutPunctuation = cleanPunctuation(text);
     QStringList words = withoutPunctuation.split(" ",QString::SkipEmptyParts);
     for(QString word:words){
+
         this->add(word.toLower());
     }
 }
@@ -93,8 +94,9 @@ int Dictionary::find(QString key){
 }
 
 QString Dictionary::cleanPunctuation(QString text){
-    QRegExp val("[,.!»«—@#$%^&*-()_+?<>\\/;:'\"`|{}]");
-    QRegExp val1("[,.]");
+    QRegExp val("[-\t\n,.!»«—@#$%^&*-()_+?<>\\\\/;:'\"`|{}]");
+    QRegExp spaceSimb("[\t\n\v]");
+    text = text.replace(spaceSimb,QString(" "));
     QString newStr = text.replace(val, QString(""));
     return newStr;
 }

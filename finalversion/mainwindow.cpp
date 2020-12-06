@@ -34,7 +34,7 @@ MainWindow::MainWindow(QWidget *parent)
     //ui(new Ui::MainWindow)
 {
 
-
+    this -> setWindowTitle("Frequency Dictionary");
     this->setWindowIcon(QIcon::fromTheme("windows10"));
     snoopy = new DictionarySnoopy;
     createDialog = new FileCreateDialog;
@@ -80,6 +80,7 @@ void MainWindow::createWorkArea(){
     sourceLayout = new QVBoxLayout();
     sourceLabel = new QTextEdit(tr("Исходный текст"));
     sourceLabel->setEnabled(false);
+    sourceLabel->setEnabled(false);
     sourceLabel -> setAlignment(Qt::AlignCenter);
     sourceLabel->setMaximumHeight(50);
     sourceLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::MinimumExpanding);
@@ -114,6 +115,7 @@ void MainWindow::createWorkArea(){
 
     dictLayout = new QVBoxLayout();
     dictLabel = new QTextEdit(tr("Словарь"));
+    dictLabel ->setEnabled(false);
     dictLabel->setMaximumHeight(50);
     dictLabel->setSizePolicy(QSizePolicy::Preferred,QSizePolicy::MinimumExpanding);
     dictLabel -> setAlignment(Qt::AlignCenter);
@@ -154,7 +156,6 @@ void MainWindow::createMenu(){
     sourceMenu->addAction(QIcon::fromTheme("save"),"Сохранить", this, SLOT(saveSource()),Qt::CTRL+Qt::Key_S);
     sourceMenu->addAction(QIcon::fromTheme("save-us"),"Сохранить как", this, SLOT(saveSourceAs()));
     sourceMenu->addSeparator();
-    sourceMenu->addAction(QIcon::fromTheme("exit"),"Выйти", qApp, exit);
 
     QMenu * dirMenu = new QMenu("Словарь");
     dirMenu->addAction(QIcon::fromTheme("ink"),"Новый словарь",this, SLOT(handleNewDict()),Qt::ALT+Qt::Key_N);
@@ -169,15 +170,25 @@ void MainWindow::createMenu(){
 }
 
 void MainWindow::setConnections(){
+    connect(greetForm,&Greeting::sig_newSourse, this, &MainWindow::handleNewSource);
     connect(greetForm, &Greeting::indicateClosing ,this,&MainWindow::setOnGreetingClosed);
-    connect(greetForm, &Greeting::sig_newSourse, createDialog, &Greeting::show);
+    //connect(greetForm, &Greeting::sig_newSourse, this, &MainWindow::handleNewSource);
     connect(greetForm, &Greeting::sig_openSourse, this, &MainWindow::openSource);
     connect(greetForm, &Greeting::sig_openDictList, this, &MainWindow::openDict);
     connect(findPushButton, &QPushButton::clicked, this, &MainWindow::setOnFindClicked);
     connect(createDictPushButton, &QPushButton::clicked, this, &MainWindow::setOnCreateDictClicked);
     connect(snoopy, &DictionarySnoopy::searchElem, this, &MainWindow::searchInDict);
     connect(this, &MainWindow::countOfFindingKeys, snoopy, &DictionarySnoopy::setResult);
+    connect(greetForm, &Greeting::sig_template, this, &MainWindow::openTemplate);
     //connect(greetForm, &Greeting::sig_newDict,this, newDict());
+}
+
+void MainWindow::openTemplate(){
+    qDebug()<<QDir::currentPath();
+    qDebug()<<QApplication::applicationDirPath();
+    turnOn();
+    //QString path ="‪‪D:/Documents/Denisov/Алена.txt";
+    showSource(QApplication::applicationDirPath()+ tr("/mayak.txt"));
 }
 
 void MainWindow::setOnGreetingClosed(){
@@ -185,21 +196,22 @@ void MainWindow::setOnGreetingClosed(){
 }
 
 void MainWindow::setOnCreateDictClicked(){
-    if(dictFile == nullptr){
-        handleNewDict();
-        return;
-    }
+//    if(dictFile == nullptr){
+//        handleNewDict();
+//        return;
+//    }
 
     dictionary->clear();
-    dictionary->analise(sourceEdit->toPlainText());
+    dictionary->analyze(sourceEdit->toPlainText());
 
-    delete model;
+    if(model!= nullptr)
+        delete model;
     model = new QStandardItemModel(table);
     dictionary->createModel(model);
     table ->setModel(model);
     //printFile(dictFile, dictEdit);
     findPushButton->setEnabled(true);
-    saveDict();
+    //saveDict();
     saveSource();
 }
 
@@ -219,25 +231,33 @@ MainWindow::~MainWindow(){
 
 
 void MainWindow::handleNewSource(){
-    connect(createDialog,&FileCreateDialog::createFile,this,&MainWindow::newSource);
-    createDialog->show();
+
+    QString newName = QFileDialog::getSaveFileName(
+                this,tr("New source"),
+                QDir::currentPath(),
+                tr("Text files (*.txt)"));
+    newSource(newName);
 }
 
 void MainWindow::handleNewDict(){
-    connect(createDialog,&FileCreateDialog::createFile,this,&MainWindow::newDict);
-    createDialog->show();
+    QString newName = QFileDialog::getSaveFileName(
+                this,tr("New dictionary"),
+                QDir::currentPath(),
+                tr("Dictionary files (*.dict)"));
+    newDict(newName);
 }
 
 void MainWindow::cleanDictArea(){
     findPushButton->setEnabled(false);
-    delete model;
+    if (model!=nullptr)
+        delete model;
 }
 
 
-void MainWindow::newSource(QString dir, QString name){
-    cleanDictArea();
+void MainWindow::newSource(QString name){
+    //cleanDictArea();
     delete sourceFile;
-    sourceFile = new QFile(dir+"/"+name);
+    sourceFile = new QFile(name);
     sourceFile->close();
     if(greetForm!=nullptr)
         greetForm -> close();
@@ -245,8 +265,9 @@ void MainWindow::newSource(QString dir, QString name){
         createDialog -> close();
     }
     sourceEdit -> setText("");
-    sourceLabel->setText(tr("Исходный текст") + sourceFile->fileName());
+    sourceLabel->setText(tr("Исходный текст ") + sourceFile->fileName());
 }
+
 
 void MainWindow::openSource(){
     findPushButton->setEnabled(false);
@@ -258,8 +279,20 @@ void MainWindow::openSource(){
          greetForm -> close();
     }
     printFile(sourceFile,sourceEdit);
-    sourceLabel->setText(tr("Исходный текст") + sourceFile->fileName());
+    sourceLabel->setText(tr("Исходный текст ") + sourceFile->fileName());
 }
+
+void MainWindow::showSource(QString path){
+    findPushButton->setEnabled(false);
+    delete sourceFile;
+    sourceFile = new QFile(path);
+    if(createDialog!=nullptr)
+        createDialog -> close();
+    greetForm -> close();
+    printFile(sourceFile,sourceEdit);
+    sourceLabel->setText(tr("Исходный текст ") + sourceFile->fileName());
+}
+
 
 
 void MainWindow::parseDictToTable(QFile *dictFile, QStandardItemModel * model){
@@ -286,10 +319,10 @@ void MainWindow::parseDictToTable(QFile *dictFile, QStandardItemModel * model){
     model->setRowCount(row);
 }
 
-void MainWindow::newDict(QString dir, QString name){
+void MainWindow::newDict(QString name){
     //cleanDictArea();
     delete dictFile;
-    dictFile = new QFile(dir+"/"+name);
+    dictFile = new QFile(name);
     dictFile->close();
     if(greetForm!=nullptr)
         greetForm -> close();
@@ -323,7 +356,7 @@ void MainWindow::saveSource(){
         saveFile(sourceFile,sourceEdit->toPlainText());
     else
         saveSourceAs();
-    sourceLabel->setText(tr("Исходный текст") + sourceFile->fileName());
+    sourceLabel->setText(tr("Исходный текст ") + sourceFile->fileName());
 }
 
 void  MainWindow::saveDict(){
@@ -342,6 +375,7 @@ void  MainWindow::saveDict(){
         stream->setCodec("UTF-8");
         dictionary->show(stream, fieldWidth);
         dictFile->close();
+        delete stream;
     }
     dictLabel->setText(tr("Словарь: ")+dictFile->fileName());
 }
@@ -356,7 +390,7 @@ void MainWindow::saveSourceAs(){
         sourceFile = new QFile(newName);
         saveFile(sourceFile,sourceEdit->toPlainText());
     }
-    sourceLabel->setText(tr("Исходный текст") + sourceFile->fileName());
+    sourceLabel->setText(tr("Исходный текст ") + sourceFile->fileName());
 }
 
 void MainWindow::saveDictAs(){
@@ -372,6 +406,7 @@ void MainWindow::saveDictAs(){
             stream->setCodec("UTF-8");
             dictionary->show(stream, fieldWidth);
             dictFile->close();
+            delete stream;
         }
     }
     dictLabel->setText(tr("Словарь: ")+dictFile->fileName());
@@ -382,7 +417,7 @@ void MainWindow::saveDictAs(){
 
 
 void MainWindow::printFile(QFile * file, QTextEdit * edit){
-   if(!file -> open(QIODevice::ReadOnly)){
+   if(!file -> open(QIODevice::ReadOnly|QIODevice::Text)){
         qDebug()<<"MainWindow::printFile: File "+file->fileName()+ " not open for reading";
         return;
     }

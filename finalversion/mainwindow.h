@@ -37,22 +37,25 @@ public slots:
 
     // slots about SOURCE file
     void handleNewSource();
-    void newSource(QString dir, QString name);
+    void newSource(QString );
+
         // SAVING
     void saveSource();
     void saveSourceAs();
         // OPENING
     void openSource();
+    void showSource(QString);
 
     // slots about DICTIONARY file
 
     void handleNewDict();
-    void newDict(QString dir, QString name);
+    void newDict(QString);
         // SAVING
     void saveDictAs();
     void saveDict();
         // OPENING
     void openDict();
+    void openTemplate();
 
         // SEARCHING
     void searchInDict(QString);
@@ -76,25 +79,30 @@ private:
 
     Greeting * greetForm = nullptr;
     Dictionary * dictionary = nullptr;
-    //QString path = "D://Documents//Denisov//ProgPractice//C++//courseAOOD//CourseWorkAOOD//build-QtFrequency-Desktop_Qt_5_14_2_MinGW_32_bit-Debug//Icons//";
-    QMenu * sourceMenu = nullptr, * dirMenu = nullptr;
+    QMenu * sourceMenu = nullptr,
+        * dirMenu = nullptr;
     QHBoxLayout  * mainLayout = nullptr;
-    QVBoxLayout * sourceLayout = nullptr, * dictLayout = nullptr, * buttonLayout = nullptr;
+    QVBoxLayout * sourceLayout = nullptr,
+        * dictLayout = nullptr,
+        * buttonLayout = nullptr;
 
     FileCreateDialog * createDialog = nullptr;
 
     DictionarySnoopy * snoopy = nullptr;
 
-    QTableView * table;
+    QTableView * table = nullptr;
 
-    QStandardItemModel * model;
+    QStandardItemModel * model = nullptr;
 
-    QTextEdit * sourceEdit = nullptr, * dictEdit = nullptr;
-    QFile * sourceFile = nullptr, * dictFile = nullptr;
+    QTextEdit * sourceEdit = nullptr,
+        * dictEdit = nullptr;
+    QFile * sourceFile = nullptr,
+        * dictFile = nullptr;
     QTextStream * sourceStream = nullptr;
     QPushButton * createDictPushButton = nullptr;
     QPushButton * findPushButton = nullptr;
-    QTextEdit * dictLabel = nullptr, * sourceLabel = nullptr;
+    QTextEdit * dictLabel = nullptr,
+        * sourceLabel = nullptr;
     QLabel * statusBarLabel = nullptr;
 
     void createMenu();

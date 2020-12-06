@@ -8,6 +8,7 @@
     <file alias="source/save.png">icons/mySet/source/save.png</file>
     <file alias="source/new.png">icons/mySet/source/new.png</file>
     <file alias="source/new1.png">icons/mySet/source/new1.png</file>
+    <file alias="source/template.png">icons/mySet/source/template.png</file>
 	
 	<file alias="windows/windows10.png">icons/mySet/windows/windows10.png</file>
 	
@@ -16,6 +17,7 @@
 	<file alias="dictionary/book.png">icons/mySet/dictionary/book.png</file>
 	<file alias="dictionary/redact.png">icons/mySet/dictionary/redact.png</file>
 	<file alias="dictionary/ink.png">icons/mySet/dictionary/ink.png</file>
+	
 	
  
 </qresource>

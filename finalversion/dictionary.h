@@ -29,7 +29,7 @@ public:
     void show(QTextStream *, int);   // вывести элементы словаря в алфавитном порядке
     void createModel(QStandardItemModel *);
     int find(QString);    // поиск элемента словаря по слову
-    void analise(QString); // построить словарь по заданному тексту
+    void analyze(QString); // построить словарь по заданному тексту
     QString cleanWord(QString); // очистка слова от знаков препинаний и лишних символов
     int getCount();
     void clear();

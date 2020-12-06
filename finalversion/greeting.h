@@ -27,11 +27,15 @@ signals:
     void sig_openSourse();
     void sig_openDictList();
     void indicateClosing();
+    void sig_template();
+
+private slots:
 
 private:
     QPushButton *newSourcePushButton = nullptr;
     QPushButton *openSourcePushButton = nullptr;
     QPushButton *openDictPushButton = nullptr;
+    QPushButton *templatePushButton = nullptr;
     QMainWindow *mainWindow = nullptr;
 
     void createButtonPanel();
