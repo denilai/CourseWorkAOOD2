@@ -23,7 +23,7 @@ QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_MainWindow_t {
     QByteArrayData data[21];
-    char stringdata0[264];
+    char stringdata0[267];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -39,25 +39,25 @@ QT_MOC_LITERAL(3, 31, 15), // "handleNewSource"
 QT_MOC_LITERAL(4, 47, 9), // "newSource"
 QT_MOC_LITERAL(5, 57, 10), // "saveSource"
 QT_MOC_LITERAL(6, 68, 12), // "saveSourceAs"
-QT_MOC_LITERAL(7, 81, 10), // "openSource"
-QT_MOC_LITERAL(8, 92, 10), // "showSource"
-QT_MOC_LITERAL(9, 103, 13), // "handleNewDict"
-QT_MOC_LITERAL(10, 117, 7), // "newDict"
-QT_MOC_LITERAL(11, 125, 10), // "saveDictAs"
-QT_MOC_LITERAL(12, 136, 8), // "saveDict"
-QT_MOC_LITERAL(13, 145, 8), // "openDict"
-QT_MOC_LITERAL(14, 154, 12), // "openTemplate"
-QT_MOC_LITERAL(15, 167, 12), // "searchInDict"
-QT_MOC_LITERAL(16, 180, 10), // "closeEvent"
-QT_MOC_LITERAL(17, 191, 12), // "QCloseEvent*"
-QT_MOC_LITERAL(18, 204, 22), // "setOnCreateDictClicked"
-QT_MOC_LITERAL(19, 227, 19), // "setOnGreetingClosed"
-QT_MOC_LITERAL(20, 247, 16) // "setOnFindClicked"
+QT_MOC_LITERAL(7, 81, 13), // "openNewSource"
+QT_MOC_LITERAL(8, 95, 10), // "openSource"
+QT_MOC_LITERAL(9, 106, 13), // "handleNewDict"
+QT_MOC_LITERAL(10, 120, 7), // "newDict"
+QT_MOC_LITERAL(11, 128, 10), // "saveDictAs"
+QT_MOC_LITERAL(12, 139, 8), // "saveDict"
+QT_MOC_LITERAL(13, 148, 8), // "openDict"
+QT_MOC_LITERAL(14, 157, 12), // "openTemplate"
+QT_MOC_LITERAL(15, 170, 12), // "searchInDict"
+QT_MOC_LITERAL(16, 183, 10), // "closeEvent"
+QT_MOC_LITERAL(17, 194, 12), // "QCloseEvent*"
+QT_MOC_LITERAL(18, 207, 22), // "setOnCreateDictClicked"
+QT_MOC_LITERAL(19, 230, 19), // "setOnGreetingClosed"
+QT_MOC_LITERAL(20, 250, 16) // "setOnFindClicked"
 
     },
     "MainWindow\0countOfFindingKeys\0\0"
     "handleNewSource\0newSource\0saveSource\0"
-    "saveSourceAs\0openSource\0showSource\0"
+    "saveSourceAs\0openNewSource\0openSource\0"
     "handleNewDict\0newDict\0saveDictAs\0"
     "saveDict\0openDict\0openTemplate\0"
     "searchInDict\0closeEvent\0QCloseEvent*\0"
@@ -137,8 +137,8 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 2: _t->newSource((*reinterpret_cast< QString(*)>(_a[1]))); break;
         case 3: _t->saveSource(); break;
         case 4: _t->saveSourceAs(); break;
-        case 5: _t->openSource(); break;
-        case 6: _t->showSource((*reinterpret_cast< QString(*)>(_a[1]))); break;
+        case 5: _t->openNewSource(); break;
+        case 6: _t->openSource((*reinterpret_cast< QString(*)>(_a[1]))); break;
         case 7: _t->handleNewDict(); break;
         case 8: _t->newDict((*reinterpret_cast< QString(*)>(_a[1]))); break;
         case 9: _t->saveDictAs(); break;

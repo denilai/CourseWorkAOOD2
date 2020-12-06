@@ -18,7 +18,6 @@
 #include <QPushButton>
 #include <QTextCursor>
 #include <QByteArray>
-#include "filecreatedialog.h"
 #include "dictionarysnoopy.h"
 #include "dictionary.h"
 #include "greeting.h"
@@ -37,7 +36,7 @@ MainWindow::MainWindow(QWidget *parent)
     this -> setWindowTitle("Frequency Dictionary");
     this->setWindowIcon(QIcon::fromTheme("windows10"));
     snoopy = new DictionarySnoopy;
-    createDialog = new FileCreateDialog;
+    //createDialog = new FileCreateDialog;
     greetForm = new Greeting(this);// должно быть с parent this, иначе открывается сзади
     dictionary = new Dictionary();
     //dictFile = new QFile("newDict.txt");
@@ -152,7 +151,7 @@ void MainWindow::createMenu(){
 
     QMenu * sourceMenu = new QMenu("&Текст");
     sourceMenu->addAction(QIcon::fromTheme("new1"),"Новый текст",this, SLOT(handleNewSource()),Qt::CTRL+Qt::Key_N);
-    sourceMenu->addAction(QIcon::fromTheme("open"),"Открыть текст", this, SLOT(openSource()),Qt::CTRL+Qt::Key_O);
+    sourceMenu->addAction(QIcon::fromTheme("open"),"Открыть текст", this, SLOT(openNewSource()),Qt::CTRL+Qt::Key_O);
     sourceMenu->addAction(QIcon::fromTheme("save"),"Сохранить", this, SLOT(saveSource()),Qt::CTRL+Qt::Key_S);
     sourceMenu->addAction(QIcon::fromTheme("save-us"),"Сохранить как", this, SLOT(saveSourceAs()));
     sourceMenu->addSeparator();
@@ -173,7 +172,7 @@ void MainWindow::setConnections(){
     connect(greetForm,&Greeting::sig_newSourse, this, &MainWindow::handleNewSource);
     connect(greetForm, &Greeting::indicateClosing ,this,&MainWindow::setOnGreetingClosed);
     //connect(greetForm, &Greeting::sig_newSourse, this, &MainWindow::handleNewSource);
-    connect(greetForm, &Greeting::sig_openSourse, this, &MainWindow::openSource);
+    connect(greetForm, &Greeting::sig_openSourse, this, &MainWindow::openNewSource);
     connect(greetForm, &Greeting::sig_openDictList, this, &MainWindow::openDict);
     connect(findPushButton, &QPushButton::clicked, this, &MainWindow::setOnFindClicked);
     connect(createDictPushButton, &QPushButton::clicked, this, &MainWindow::setOnCreateDictClicked);
@@ -188,7 +187,7 @@ void MainWindow::openTemplate(){
     qDebug()<<QApplication::applicationDirPath();
     turnOn();
     //QString path ="‪‪D:/Documents/Denisov/Алена.txt";
-    showSource(QApplication::applicationDirPath()+ tr("/mayak.txt"));
+    openSource(QApplication::applicationDirPath()+ tr("/mayak.txt"));
 }
 
 void MainWindow::setOnGreetingClosed(){
@@ -259,36 +258,31 @@ void MainWindow::newSource(QString name){
     delete sourceFile;
     sourceFile = new QFile(name);
     sourceFile->close();
-    if(greetForm!=nullptr)
+    if(greetForm!=nullptr&&name!="")
         greetForm -> close();
-    if(createDialog!=nullptr){
-        createDialog -> close();
-    }
+//    if(createDialog!=nullptr){
+//        createDialog -> close();
+//    }
     sourceEdit -> setText("");
     sourceLabel->setText(tr("Исходный текст ") + sourceFile->fileName());
 }
 
 
-void MainWindow::openSource(){
-    findPushButton->setEnabled(false);
-    delete sourceFile;
+void MainWindow::openNewSource(){
     sourceFile = new QFile(fileOpenDialog("Text files (*.txt)"));
-    if(createDialog!=nullptr)
-        createDialog -> close();
-    if (openSuccessful){
-         greetForm -> close();
-    }
-    printFile(sourceFile,sourceEdit);
-    sourceLabel->setText(tr("Исходный текст ") + sourceFile->fileName());
+    openSource(sourceFile->fileName());
 }
 
-void MainWindow::showSource(QString path){
+
+
+void MainWindow::openSource(QString path){
     findPushButton->setEnabled(false);
     delete sourceFile;
     sourceFile = new QFile(path);
-    if(createDialog!=nullptr)
-        createDialog -> close();
-    greetForm -> close();
+//    if(createDialog!=nullptr)
+//        createDialog -> close();
+    if(path!=""&&greetForm!=nullptr)
+        greetForm -> close();
     printFile(sourceFile,sourceEdit);
     sourceLabel->setText(tr("Исходный текст ") + sourceFile->fileName());
 }
@@ -324,11 +318,11 @@ void MainWindow::newDict(QString name){
     delete dictFile;
     dictFile = new QFile(name);
     dictFile->close();
-    if(greetForm!=nullptr)
+    if(greetForm!=nullptr&&name!="")
         greetForm -> close();
-    if(createDialog!=nullptr){
-        createDialog -> close();
-    }
+//    if(createDialog!=nullptr&&name!=""){
+//        createDialog -> close();
+//    }
     delete model;
     model = new QStandardItemModel(table);
     table->setModel(model);
@@ -464,7 +458,7 @@ QString MainWindow::dictOfThisFile(QString sourcePath){
     QString dictPath = QString::fromStdString(
                 sourcePath.toStdString().substr(
                     0,sourcePath.toStdString().find_last_of("/")));
-    int s = sourcePath.toStdString().find_last_of("/");
+    //int s = sourcePath.toStdString().find_last_of("/");
 
     std::string  shortName =
                 sourcePath.toStdString().substr(sourcePath.toStdString().find_last_of("/"));

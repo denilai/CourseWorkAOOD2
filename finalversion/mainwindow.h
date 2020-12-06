@@ -20,7 +20,7 @@ class QStandardItemModel;
 
 
 // custom classes
-class FileCreateDialog; // класс, реализующий функцию создания нового файла
+//class FileCreateDialog; // класс, реализующий функцию создания нового файла
 class Dictionary;       // класс, реализующий функционал и внутреннее представление словаря
 class Greeting;         // приветственная форма приложения
 class DictionarySnoopy; // класс, реализующий функционал поиска в словаря по ключу
@@ -43,8 +43,8 @@ public slots:
     void saveSource();
     void saveSourceAs();
         // OPENING
-    void openSource();
-    void showSource(QString);
+    void openNewSource();
+    void openSource(QString);
 
     // slots about DICTIONARY file
 
@@ -86,7 +86,7 @@ private:
         * dictLayout = nullptr,
         * buttonLayout = nullptr;
 
-    FileCreateDialog * createDialog = nullptr;
+    //FileCreateDialog * createDialog = nullptr;
 
     DictionarySnoopy * snoopy = nullptr;
 
