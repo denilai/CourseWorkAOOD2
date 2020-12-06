@@ -187,7 +187,7 @@ void MainWindow::openTemplate(){
     qDebug()<<QApplication::applicationDirPath();
     turnOn();
     //QString path ="‪‪D:/Documents/Denisov/Алена.txt";
-    openSource(QApplication::applicationDirPath()+ tr("/mayak.txt"));
+    openSource(QApplication::applicationDirPath()+ tr("/blok.txt"));
 }
 
 void MainWindow::setOnGreetingClosed(){
