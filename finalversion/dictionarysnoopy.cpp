@@ -1,4 +1,5 @@
 #include "dictionarysnoopy.h"
+
 #include <QLabel>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
@@ -11,11 +12,9 @@ DictionarySnoopy::DictionarySnoopy(QWidget *parent) : QWidget(parent)
 {
     requestLabel = new QLabel("Найти");
     requestLabel -> setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-    //requestLabel -> setFixedWidth(110);
 
 
     resultLabel = new QLabel ("Результат поиска - ");
-    //resultLabel -> setFixedWidth(110);
     resultLabel -> setSizePolicy(QSizePolicy ::Fixed, QSizePolicy::Fixed);
 
 
@@ -58,7 +57,6 @@ DictionarySnoopy::DictionarySnoopy(QWidget *parent) : QWidget(parent)
 
     mainLayout = new QVBoxLayout(this);
     mainLayout -> addLayout(inputLayout);
-    //mainLayout -> addStretch(1);
     mainLayout -> addLayout(buttonLayout);
     this-> setSizePolicy(QSizePolicy::Maximum,QSizePolicy::Maximum);
     this -> setMaximumHeight(147);
@@ -68,7 +66,6 @@ DictionarySnoopy::DictionarySnoopy(QWidget *parent) : QWidget(parent)
 
 void DictionarySnoopy::setOnSearchButtonClicked(){
     emit searchElem(requestEdit->toPlainText());
-    //clean();
 }
 
 void DictionarySnoopy::setOnClearButtonClicked(){
@@ -79,10 +76,5 @@ void DictionarySnoopy::setOnClearButtonClicked(){
 void DictionarySnoopy::setResult(int count){
     answerLabel->setText(QString::number(count));
 }
-
-//void FindDictDialog::clean(){
-//    nameEdit -> setText("");
-//    dirEdit -> setText("");
-//}
 
 

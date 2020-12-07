@@ -32,10 +32,10 @@ private:
     QPushButton * searchButton = nullptr;
     QPushButton * clearButton = nullptr;
 
-
     QTextEdit * requestEdit = nullptr;
 
     void clean();
+
 private slots:
     void setOnSearchButtonClicked();
     void setOnClearButtonClicked();

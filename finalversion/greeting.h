@@ -41,7 +41,6 @@ private:
     void createButtonPanel();
     void createConnections();
 
-
     public slots:
     void closeEvent(QCloseEvent*);
     //void closeEvent();

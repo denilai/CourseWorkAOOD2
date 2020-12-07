@@ -20,7 +20,6 @@ class QStandardItemModel;
 
 
 // custom classes
-//class FileCreateDialog; // класс, реализующий функцию создания нового файла
 class Dictionary;       // класс, реализующий функционал и внутреннее представление словаря
 class Greeting;         // приветственная форма приложения
 class DictionarySnoopy; // класс, реализующий функционал поиска в словаря по ключу
@@ -32,7 +31,6 @@ class MainWindow : public QMainWindow
 
 public:
     MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
 public slots:
 
     // slots about SOURCE file
@@ -46,8 +44,8 @@ public slots:
     void openNewSource();
     void openSource(QString);
 
-    // slots about DICTIONARY file
 
+    // slots about DICTIONARY file
     void handleNewDict();
     void newDict(QString);
         // SAVING
@@ -73,6 +71,7 @@ signals:
     void countOfFindingKeys(int);
 
 private:
+    bool first = true;
     const int fieldWidth = 20;
     bool openSuccessful = false;
     bool createSuccessful = false;
@@ -86,14 +85,10 @@ private:
         * dictLayout = nullptr,
         * buttonLayout = nullptr;
 
-    //FileCreateDialog * createDialog = nullptr;
 
     DictionarySnoopy * snoopy = nullptr;
-
     QTableView * table = nullptr;
-
     QStandardItemModel * model = nullptr;
-
     QTextEdit * sourceEdit = nullptr,
         * dictEdit = nullptr;
     QFile * sourceFile = nullptr,
@@ -113,8 +108,6 @@ private:
     void createStatusBar();
     void setStatusBarText(QString);
 
-    QString dictOfThisFile(QString);
-
     void turnOn();
     void turnOff();
 
@@ -123,6 +116,7 @@ private:
     void printFile(QFile*, QTextEdit*);
     void saveFile(QFile*, QString);
 
+    QString dictOfThisFile(QString);
     QString fileOpenDialog(QString);
     QString fileNewDialog();
 };

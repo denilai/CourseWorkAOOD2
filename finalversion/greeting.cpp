@@ -1,4 +1,5 @@
 #include "greeting.h"
+
 #include <QPushButton>
 #include <QAction>
 #include <QHBoxLayout>
@@ -33,9 +34,7 @@ Greeting::Greeting(QWidget *parent) :
     this->setFixedSize(300,250);
     createButtonPanel();
     createConnections();
-
 }
-
 
 
 void Greeting::createConnections(){
@@ -58,11 +57,7 @@ void Greeting::closeEvent(QCloseEvent *event)
     event ->accept();
 }
 
-//void Greeting::closeEvent( )
-//{
-//    emit indicateClosing();
-//    //event->accept();
-//}
+
 void Greeting::createButtonPanel(){
 
     QVBoxLayout *vbox = new QVBoxLayout(this);
@@ -91,31 +86,3 @@ void Greeting::createButtonPanel(){
     vbox->addWidget(templatePushButton);
     vbox->addStretch(1);
 }
-
-
-//void Greeting::createMenu(){
-//    QMenuBar menuBar(this);
-//    sourceMenu = new QMenu("&Текст");
-//    sourceMenu->addAction("Новый текст",this, SLOT(newSource()),Qt::CTRL+Qt::Key_N);
-//    sourceMenu->addAction("Открыть текст", this, SLOT(openSource()),Qt::CTRL+Qt::Key_O);
-//    sourceMenu->addSeparator();
-//    sourceMenu->addAction("Сохранить", this, SLOT(saveSource()),Qt::CTRL+Qt::Key_S);
-//    sourceMenu->addAction("Сохранить как", this, SLOT(saveSourceUs()));
-
-//    dirMenu = new QMenu("Словарь");
-//    dirMenu->addAction("Новый словарь",this, SLOT(newDict()),Qt::ALT+Qt::Key_N);
-//    dirMenu->addAction("Отркыть словарь",this,SLOT(openDict()),Qt::ALT+Qt::Key_O);
-//    dirMenu->addAction("&Поиск в словаре",this,SLOT(findDict()),Qt::CTRL+Qt::Key_F);
-//    menuBar.addMenu(sourceMenu);
-//    menuBar.addMenu(dirMenu);
-//    menuBar.show();
-//}
-
-
-
-//// SIGNALS
-//void Greeting::sig_openSourse(){}
-
-//void Greeting::sig_newDict(){}
-
-//void Greeting::sig_newSourse(){}

@@ -21,16 +21,16 @@ private:
     int count = 0;
 
 public:
-    Dictionary();              // создание пустого словаря
-    void add(QString);     // добавление элемента в словарь
-    void increase(QString);// увеличение значения счетчика
-                               // слова в элементе словаря с заданным словом
+    Dictionary();                           // создание пустого словаря
+    void add(QString);                      // добавление элемента в словарь
+    void increase(QString);                 // увеличение значения счетчика
+                                            // слова в элементе словаря с заданным словом
 
-    void show(QTextStream *, int);   // вывести элементы словаря в алфавитном порядке
+    void show(QTextStream *, int);          // вывести элементы словаря в алфавитном порядке
     void createModel(QStandardItemModel *);
-    int find(QString);    // поиск элемента словаря по слову
-    void analyze(QString); // построить словарь по заданному тексту
-    QString cleanWord(QString); // очистка слова от знаков препинаний и лишних символов
+    int find(QString);                      // поиск элемента словаря по слову
+    void analyze(QString);                  // построить словарь по заданному тексту
+    QString cleanWord(QString);             // очистка слова от знаков препинаний и лишних символов
     int getCount();
     void clear();
 };

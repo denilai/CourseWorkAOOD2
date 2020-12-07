@@ -1,4 +1,9 @@
 #include "mainwindow.h"
+#include "dictionarysnoopy.h"
+#include "dictionary.h"
+#include "greeting.h"
+
+
 #include <QMenu>
 #include <QMenuBar>
 #include <QIcon>
@@ -18,9 +23,6 @@
 #include <QPushButton>
 #include <QTextCursor>
 #include <QByteArray>
-#include "dictionarysnoopy.h"
-#include "dictionary.h"
-#include "greeting.h"
 #include <QScreen>
 #include <QDesktopWidget>
 #include <QMessageBox>
@@ -30,16 +32,13 @@
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
-    //ui(new Ui::MainWindow)
 {
 
     this -> setWindowTitle("Frequency Dictionary");
     this->setWindowIcon(QIcon::fromTheme("windows10"));
     snoopy = new DictionarySnoopy;
-    //createDialog = new FileCreateDialog;
-    greetForm = new Greeting(this);// должно быть с parent this, иначе открывается сзади
+    greetForm = new Greeting(this);
     dictionary = new Dictionary();
-    //dictFile = new QFile("newDict.txt");
     this->setMinimumSize(800,500);
     createMenu();
     createWorkArea();
@@ -47,7 +46,6 @@ MainWindow::MainWindow(QWidget *parent)
     setConnections();
     turnOff();
     greetForm->show();
-
 }
 
 void MainWindow::turnOff(){
@@ -119,11 +117,7 @@ void MainWindow::createWorkArea(){
     dictLabel->setSizePolicy(QSizePolicy::Preferred,QSizePolicy::MinimumExpanding);
     dictLabel -> setAlignment(Qt::AlignCenter);
     dictLayout -> setSpacing(10);
-//    dictEdit = new QTextEdit();
-//    dictEdit -> setMinimumSize(100,200);
-//    dictEdit -> setSizePolicy(QSizePolicy::MinimumExpanding,QSizePolicy::MinimumExpanding);
     dictLayout -> addWidget(dictLabel);
-    //dictLayout -> addWidget(dictEdit);
     dictLayout -> setAlignment(table, Qt::AlignCenter);
     dictLayout->addWidget(table);
 
@@ -163,7 +157,6 @@ void MainWindow::createMenu(){
     dirMenu->addAction(QIcon::fromTheme("save"),"&Сохранить словарь",this,SLOT(saveDict()),Qt::ALT+Qt::Key_S);
     dirMenu->addAction(QIcon::fromTheme("save-us"),"&Сохранить словарь как...",this,SLOT(saveDictAs()));
 
-
     menuBar()->addMenu(sourceMenu);
     menuBar()->addMenu(dirMenu);
 }
@@ -171,24 +164,23 @@ void MainWindow::createMenu(){
 void MainWindow::setConnections(){
     connect(greetForm,&Greeting::sig_newSourse, this, &MainWindow::handleNewSource);
     connect(greetForm, &Greeting::indicateClosing ,this,&MainWindow::setOnGreetingClosed);
-    //connect(greetForm, &Greeting::sig_newSourse, this, &MainWindow::handleNewSource);
     connect(greetForm, &Greeting::sig_openSourse, this, &MainWindow::openNewSource);
     connect(greetForm, &Greeting::sig_openDictList, this, &MainWindow::openDict);
+    connect(greetForm, &Greeting::sig_template, this, &MainWindow::openTemplate);
     connect(findPushButton, &QPushButton::clicked, this, &MainWindow::setOnFindClicked);
     connect(createDictPushButton, &QPushButton::clicked, this, &MainWindow::setOnCreateDictClicked);
     connect(snoopy, &DictionarySnoopy::searchElem, this, &MainWindow::searchInDict);
     connect(this, &MainWindow::countOfFindingKeys, snoopy, &DictionarySnoopy::setResult);
-    connect(greetForm, &Greeting::sig_template, this, &MainWindow::openTemplate);
-    //connect(greetForm, &Greeting::sig_newDict,this, newDict());
 }
 
 void MainWindow::openTemplate(){
+    first = false;
     turnOn();
     openSource(QApplication::applicationDirPath()+ tr("/blok.txt"));
 }
 
 void MainWindow::setOnGreetingClosed(){
-        turnOn();
+     turnOn();
 }
 
 void MainWindow::setOnCreateDictClicked(){
@@ -201,9 +193,7 @@ void MainWindow::setOnCreateDictClicked(){
     model = new QStandardItemModel(table);
     dictionary->createModel(model);
     table ->setModel(model);
-    //printFile(dictFile, dictEdit);
     findPushButton->setEnabled(true);
-    //saveDict();
     saveSource();
 }
 
@@ -213,15 +203,6 @@ void MainWindow::setOnFindClicked(){
     snoopy->show();
 }
 
-MainWindow::~MainWindow(){
-    //delete ui;
-}
-
-
-
-//////////////////////////////////////////////////////////////////////////////////////////////
-
-
 void MainWindow::handleNewSource(){
 
     QString newName = QFileDialog::getSaveFileName(
@@ -229,6 +210,8 @@ void MainWindow::handleNewSource(){
                 QDir::currentPath(),
                 tr("Text files (*.txt)"));
     newSource(newName);
+    if (newName!="")
+        first=false;
 }
 
 void MainWindow::handleNewDict(){
@@ -245,7 +228,6 @@ void MainWindow::cleanDictArea(){
         delete model;
 }
 
-
 void MainWindow::newSource(QString name){
     //cleanDictArea();
     delete sourceFile;
@@ -253,9 +235,6 @@ void MainWindow::newSource(QString name){
     sourceFile->close();
     if(greetForm!=nullptr&&name!="")
         greetForm -> close();
-//    if(createDialog!=nullptr){
-//        createDialog -> close();
-//    }
     sourceEdit -> setText("");
     sourceLabel->setText(tr("Исходный текст ") + sourceFile->fileName());
 }
@@ -267,19 +246,17 @@ void MainWindow::openNewSource(){
 }
 
 
-
 void MainWindow::openSource(QString path){
     findPushButton->setEnabled(false);
     delete sourceFile;
     sourceFile = new QFile(path);
-//    if(createDialog!=nullptr)
-//        createDialog -> close();
-    if(path!=""&&greetForm!=nullptr)
+    if(path!=""&&greetForm!=nullptr){
+        first=false;
         greetForm -> close();
+    }
     printFile(sourceFile,sourceEdit);
     sourceLabel->setText(tr("Исходный текст ") + sourceFile->fileName());
 }
-
 
 
 void MainWindow::parseDictToTable(QFile *dictFile, QStandardItemModel * model){
@@ -298,7 +275,7 @@ void MainWindow::parseDictToTable(QFile *dictFile, QStandardItemModel * model){
     while(!dictFile->atEnd()){
         QString line = QString::fromUtf8(dictFile->readLine());
         line = line.simplified();
-        QStringList words = line.split("|",QString::SkipEmptyParts);
+        QStringList words = line.split("|",Qt::SkipEmptyParts);
         model->setData(model->index(row, 0),words.at(0));
         model->setData(model->index(row, 1),words.at(1));
         row++;
@@ -307,15 +284,11 @@ void MainWindow::parseDictToTable(QFile *dictFile, QStandardItemModel * model){
 }
 
 void MainWindow::newDict(QString name){
-    //cleanDictArea();
     delete dictFile;
     dictFile = new QFile(name);
     dictFile->close();
     if(greetForm!=nullptr&&name!="")
         greetForm -> close();
-//    if(createDialog!=nullptr&&name!=""){
-//        createDialog -> close();
-//    }
     delete model;
     model = new QStandardItemModel(table);
     table->setModel(model);
@@ -334,6 +307,7 @@ void MainWindow::openDict(){
         table->setModel(model);
         printFile(dictFile,dictEdit);
         findPushButton->setEnabled(true);
+        first=false;
     }
     dictLabel->setText(tr("Словарь: ")+dictFile->fileName());
 }
@@ -348,11 +322,9 @@ void MainWindow::saveSource(){
 
 void  MainWindow::saveDict(){
 
-    if (dictFile == nullptr){
+    if (dictFile == nullptr || dictFile->fileName()==""){
         handleNewDict();
         return;
-        //dictFile = new QFile(fileNewDialog());
-        //dictFile = new QFile(path);
     }
 
     if(dictFile->exists())
@@ -376,15 +348,15 @@ void MainWindow::saveSourceAs(){
         delete sourceFile;
         sourceFile = new QFile(newName);
         saveFile(sourceFile,sourceEdit->toPlainText());
+        sourceLabel->setText(tr("Исходный текст ") + sourceFile->fileName());
     }
-    sourceLabel->setText(tr("Исходный текст ") + sourceFile->fileName());
 }
 
 void MainWindow::saveDictAs(){
     QString newName = QFileDialog::getSaveFileName(
                 this,tr("Save a file"),
                 QDir::currentPath(),
-                tr("Text files (*.txt)"));
+                tr("Dictionary files (*.dict))"));
     if (newName!= ""){
         delete dictFile;
         dictFile = new QFile(newName);
@@ -398,10 +370,6 @@ void MainWindow::saveDictAs(){
     }
     dictLabel->setText(tr("Словарь: ")+dictFile->fileName());
 }
-
-//////////////////////////////////////////////////////////////////////////////////////////////
-
-
 
 void MainWindow::printFile(QFile * file, QTextEdit * edit){
    if(!file -> open(QIODevice::ReadOnly|QIODevice::Text)){
@@ -451,8 +419,6 @@ QString MainWindow::dictOfThisFile(QString sourcePath){
     QString dictPath = QString::fromStdString(
                 sourcePath.toStdString().substr(
                     0,sourcePath.toStdString().find_last_of("/")));
-    //int s = sourcePath.toStdString().find_last_of("/");
-
     std::string  shortName =
                 sourcePath.toStdString().substr(sourcePath.toStdString().find_last_of("/"));
     shortName = shortName.substr(0,shortName.find_last_of("."));
@@ -476,21 +442,21 @@ void MainWindow::closeEvent(QCloseEvent *event)
         event->ignore();
     }
     if (ret == QMessageBox::Yes){
+        if(first){
+            event->accept();
+            return;
+        }
         if(sourceFile!=nullptr)
             saveSource();
         if(dictFile!=nullptr)
             saveDict();
-
+        if(!first && (sourceFile==nullptr || dictFile==nullptr || dictFile->fileName()=="" || sourceFile->fileName()=="") )
+            event->ignore();
     }
-
 }
-
-
-
 
 
 void MainWindow::searchInDict(QString key){
     emit countOfFindingKeys(dictionary->find(key));
 
 }
-
