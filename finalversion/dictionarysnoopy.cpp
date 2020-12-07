@@ -14,7 +14,7 @@ DictionarySnoopy::DictionarySnoopy(QWidget *parent) : QWidget(parent)
     //requestLabel -> setFixedWidth(110);
 
 
-    resultLabel = new QLabel ("Результат поиска");
+    resultLabel = new QLabel ("Результат поиска - ");
     //resultLabel -> setFixedWidth(110);
     resultLabel -> setSizePolicy(QSizePolicy ::Fixed, QSizePolicy::Fixed);
 

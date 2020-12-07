@@ -153,7 +153,7 @@ void MainWindow::createMenu(){
     sourceMenu->addAction(QIcon::fromTheme("new1"),"Новый текст",this, SLOT(handleNewSource()),Qt::CTRL+Qt::Key_N);
     sourceMenu->addAction(QIcon::fromTheme("open"),"Открыть текст", this, SLOT(openNewSource()),Qt::CTRL+Qt::Key_O);
     sourceMenu->addAction(QIcon::fromTheme("save"),"Сохранить", this, SLOT(saveSource()),Qt::CTRL+Qt::Key_S);
-    sourceMenu->addAction(QIcon::fromTheme("save-us"),"Сохранить как", this, SLOT(saveSourceAs()));
+    sourceMenu->addAction(QIcon::fromTheme("save-us"),"Сохранить как...", this, SLOT(saveSourceAs()));
     sourceMenu->addSeparator();
 
     QMenu * dirMenu = new QMenu("Словарь");
@@ -161,7 +161,7 @@ void MainWindow::createMenu(){
     dirMenu->addAction(QIcon::fromTheme("book"),"Отркыть словарь",this,SLOT(openDict()),Qt::ALT+Qt::Key_O);
     dirMenu->addAction(QIcon::fromTheme("find1"),"&Поиск в словаре",this,SLOT(setOnFindClicked()),Qt::ALT+Qt::Key_F);
     dirMenu->addAction(QIcon::fromTheme("save"),"&Сохранить словарь",this,SLOT(saveDict()),Qt::ALT+Qt::Key_S);
-    dirMenu->addAction(QIcon::fromTheme("save-us"),"&Сохранить словарь как",this,SLOT(saveDictAs()));
+    dirMenu->addAction(QIcon::fromTheme("save-us"),"&Сохранить словарь как...",this,SLOT(saveDictAs()));
 
 
     menuBar()->addMenu(sourceMenu);
@@ -183,10 +183,7 @@ void MainWindow::setConnections(){
 }
 
 void MainWindow::openTemplate(){
-    qDebug()<<QDir::currentPath();
-    qDebug()<<QApplication::applicationDirPath();
     turnOn();
-    //QString path ="‪‪D:/Documents/Denisov/Алена.txt";
     openSource(QApplication::applicationDirPath()+ tr("/blok.txt"));
 }
 
@@ -195,10 +192,6 @@ void MainWindow::setOnGreetingClosed(){
 }
 
 void MainWindow::setOnCreateDictClicked(){
-//    if(dictFile == nullptr){
-//        handleNewDict();
-//        return;
-//    }
 
     dictionary->clear();
     dictionary->analyze(sourceEdit->toPlainText());
